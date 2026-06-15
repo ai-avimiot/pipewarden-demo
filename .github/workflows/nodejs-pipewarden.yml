@@ -16,7 +16,10 @@ on:
 env:
   PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:1.0.2
   PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:1.0.2
-  PIPEWARDEN_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden-runner:1.0.2
+  # PIPEWARDEN_RUNNER_IMAGE intentionally omitted — falls back to
+  # catthehacker/ubuntu:act-22.04 which bundles Node.js, Python, etc.
+  # The minimal pipewarden-runner image only has iproute2 + sudo, which is
+  # insufficient for workflows that use JS-based actions like setup-node.
 
 jobs:
   monitor:
