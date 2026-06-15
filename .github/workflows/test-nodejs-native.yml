@@ -1,0 +1,54 @@
+name: "Test: Node.js — Native Proxy (Transparent)"
+
+# Requires ai-avimiot/pipewarden@v1 to be published. The action handles setup
+# AND teardown automatically (teardown runs as a post-step even on failure).
+
+on:
+  workflow_dispatch:
+
+jobs:
+  nodejs-native-transparent:
+    name: "Node.js native proxy — transparent mode"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - uses: actions/cache@v5
+        with:
+          path: ~/.cache/pip
+          key: nfw-pip-${{ runner.os }}-mitmproxy
+
+      - name: PipeWarden (transparent + DNS)
+        id: nfw
+        uses: ai-avimiot/pipewarden/native-proxy/action@v1
+        with:
+          policy-file: nodejs/network-policy.yml
+          mode: monitor
+
+      - name: "curl httpbin.org (proxy-aware)"
+        run: curl -s https://httpbin.org/ip
+
+      - name: "node index.js (captured via iptables transparent proxy)"
+        working-directory: nodejs
+        run: node index.js || true
+
+      - name: "npm test"
+        working-directory: nodejs
+        run: npm test
+
+      - name: Results
+        if: always()
+        run: |
+          echo "Status: ${{ steps.nfw.outputs.status }}"
+          echo "Blocked: ${{ steps.nfw.outputs.blocked-count }}"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nodejs-native-transparent-report
+          path: /tmp/report/

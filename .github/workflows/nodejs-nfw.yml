@@ -1,0 +1,54 @@
+name: Node.js CI with PipeWarden (container mode)
+
+# Requires ai-avimiot/pipewarden@v1 to be published and its container images
+# pushed to GHCR as public packages.
+
+on:
+  push:
+    paths:
+      - 'nodejs/**'
+      - '.github/workflows/nodejs-nfw.yml'
+  pull_request:
+    paths:
+      - 'nodejs/**'
+  workflow_dispatch:
+
+env:
+  NFW_REGISTRY: ghcr.io/ai-avimiot/pipewarden
+  NFW_TAG: v1
+  NFW_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw:v1
+  NFW_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-proxy:v1
+  NFW_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-runner:v1
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run monitored workflow
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v /tmp:/tmp \
+            -v "${{ github.workspace }}:${{ github.workspace }}" \
+            -v "$(dirname $GITHUB_STEP_SUMMARY):$(dirname $GITHUB_STEP_SUMMARY)" \
+            -e GITHUB_WORKSPACE="${{ github.workspace }}" \
+            -e GITHUB_STEP_SUMMARY="${GITHUB_STEP_SUMMARY}" \
+            -e GITHUB_OUTPUT="${GITHUB_OUTPUT}" \
+            -e INPUT_WORKFLOW_FILE="${{ github.workspace }}/.github/workflows/nodejs.yml" \
+            -e INPUT_POLICY_FILE="${{ github.workspace }}/nodejs/network-policy.yml" \
+            -e INPUT_MODE=monitor \
+            -e NFW_PROXY_IMAGE="${NFW_PROXY_IMAGE}" \
+            -e NFW_RUNNER_IMAGE="${NFW_RUNNER_IMAGE}" \
+            "$NFW_IMAGE"
+
+      - name: Upload network monitor report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: network-monitor-report
+          path: /tmp/report/
