@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
 
 env:
-  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:1.0.1
-  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:1.0.1
-  PIPEWARDEN_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden-runner:1.0.1
+  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:1.0.2
+  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:1.0.2
+  PIPEWARDEN_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden-runner:1.0.2
 
 jobs:
   monitor:
