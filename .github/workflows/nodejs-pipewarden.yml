@@ -7,18 +7,16 @@ on:
   push:
     paths:
       - 'nodejs/**'
-      - '.github/workflows/nodejs-nfw.yml'
+      - '.github/workflows/nodejs-pipewarden.yml'
   pull_request:
     paths:
       - 'nodejs/**'
   workflow_dispatch:
 
 env:
-  NFW_REGISTRY: ghcr.io/ai-avimiot/pipewarden
-  NFW_TAG: v1
-  NFW_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw:v1
-  NFW_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-proxy:v1
-  NFW_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-runner:v1
+  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:v1
+  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:v1
+  PIPEWARDEN_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden-runner:v1
 
 jobs:
   monitor:
@@ -42,9 +40,9 @@ jobs:
             -e INPUT_WORKFLOW_FILE="${{ github.workspace }}/.github/workflows/nodejs.yml" \
             -e INPUT_POLICY_FILE="${{ github.workspace }}/nodejs/network-policy.yml" \
             -e INPUT_MODE=monitor \
-            -e NFW_PROXY_IMAGE="${NFW_PROXY_IMAGE}" \
-            -e NFW_RUNNER_IMAGE="${NFW_RUNNER_IMAGE}" \
-            "$NFW_IMAGE"
+            -e PIPEWARDEN_PROXY_IMAGE="${PIPEWARDEN_PROXY_IMAGE}" \
+            -e PIPEWARDEN_RUNNER_IMAGE="${PIPEWARDEN_RUNNER_IMAGE}" \
+            "$PIPEWARDEN_IMAGE"
 
       - name: Upload network monitor report
         if: always()
