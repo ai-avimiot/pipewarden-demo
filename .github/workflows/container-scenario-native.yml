@@ -49,7 +49,7 @@ jobs:
           echo "Status:  ${{ steps.nfw.outputs.status }}"
           echo "Blocked: ${{ steps.nfw.outputs.blocked-count }}"
           echo "Expectation: the report lists the host curl to httpbin.org,"
-          echo "but NOT the container's pip install (pypi.org) or its example.com call."
+          echo "but NOT the container's pip install from pypi.org / files.pythonhosted.org."
 
       - name: Upload report
         if: always()
