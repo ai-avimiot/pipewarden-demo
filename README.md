@@ -33,16 +33,15 @@ container-bundling/ — bundle.sh: a CDK-style "build a Lambda inside Docker" st
 
 ## Native mode (recommended)
 
-Adds a single step to the workflow. Teardown happens automatically when the job ends.
+Adds a single step to the workflow. Teardown happens automatically when the job ends. Leave `policy-file` unset to auto-resolve the policy from `.github/pipewarden/` (a shared `common.network-policy.yml` merged with a per-workflow `<workflow>.network-policy.yml`):
 
 ```yaml
 - uses: ai-avimiot/pipewarden/native-proxy/action@latest
   with:
-    policy-file: nodejs/network-policy.yml
-    mode: monitor
+    mode: monitor   # policy auto-resolved from .github/pipewarden/
 ```
 
-See `test-nodejs-native.yml` for the full example.
+This repo's `.github/pipewarden/` shows the convention: `common.network-policy.yml` (shared baseline) plus one file per workflow (e.g. `test-nodejs-native.network-policy.yml`). The report tells you where to commit the auto-generated per-pipeline policy. See `test-nodejs-native.yml` for the full example.
 
 ## Container mode
 

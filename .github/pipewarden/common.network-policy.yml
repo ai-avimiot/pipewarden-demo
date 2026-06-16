@@ -1,0 +1,16 @@
+# Shared baseline merged into every pipeline's policy. Maintained by hand.
+version: "1"
+mode: monitor
+
+rules:
+  - name: "GitHub"
+    allow:
+      domains: ["api.github.com", "github.com", "*.githubusercontent.com"]
+      ports: [443]
+      protocols: [https]
+
+  - name: "Ubuntu packages"
+    allow:
+      domains: ["archive.ubuntu.com", "security.ubuntu.com"]
+      ports: [80]
+      protocols: [http]

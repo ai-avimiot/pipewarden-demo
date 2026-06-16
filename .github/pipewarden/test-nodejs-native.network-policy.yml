@@ -1,0 +1,23 @@
+# Per-pipeline policy for test-nodejs-native.yml (merged with common).
+version: "1"
+mode: monitor
+
+rules:
+  - name: "Application API"
+    allow:
+      domains: ["httpbin.org"]
+      ports: [443]
+      protocols: [https]
+
+  - name: "npm registry"
+    appears: sometimes        # only on a cache miss
+    allow:
+      domains: ["registry.npmjs.org", "*.npmjs.org"]
+      ports: [443]
+      protocols: [https]
+
+  - name: "Node.js setup"
+    allow:
+      domains: ["deb.nodesource.com"]
+      ports: [443]
+      protocols: [https]
