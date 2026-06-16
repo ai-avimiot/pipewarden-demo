@@ -2,7 +2,7 @@
 
 A minimal demo showing [PipeWarden](https://github.com/ai-avimiot/pipewarden) on a real Node.js project.
 
-> Pre-release notice: these workflows reference `ai-avimiot/pipewarden@v1` and `ghcr.io/ai-avimiot/pipewarden/*:v1`. They become runnable when PipeWarden v1 is published.
+> These workflows always track the latest PipeWarden release — they reference the floating `ai-avimiot/pipewarden/native-proxy/action@latest` action tag and `ghcr.io/ai-avimiot/pipewarden*:latest` images.
 
 ## Table of contents
 
@@ -36,7 +36,7 @@ container-bundling/ — bundle.sh: a CDK-style "build a Lambda inside Docker" st
 Adds a single step to the workflow. Teardown happens automatically when the job ends.
 
 ```yaml
-- uses: ai-avimiot/pipewarden/native-proxy/action@v1
+- uses: ai-avimiot/pipewarden/native-proxy/action@latest
   with:
     policy-file: nodejs/network-policy.yml
     mode: monitor
@@ -50,9 +50,10 @@ Wraps any existing workflow file in a monitored Docker network using `act`. Usef
 
 ```yaml
 env:
-  NFW_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw:v1
-  NFW_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-proxy:v1
-  NFW_RUNNER_IMAGE: ghcr.io/ai-avimiot/pipewarden/nfw-runner:v1
+  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:latest
+  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:latest
+  # PIPEWARDEN_RUNNER_IMAGE is optional; omitted here so it falls back to
+  # catthehacker/ubuntu:act-22.04 (bundles Node.js, Python, etc.)
 ```
 
 See `nodejs-pipewarden.yml` for the full example.

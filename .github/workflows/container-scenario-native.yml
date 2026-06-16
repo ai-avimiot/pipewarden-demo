@@ -4,7 +4,7 @@ name: "Test: Container build step — native-proxy blind spot"
 # NOT traffic from inside containers that a build step launches itself (the AWS
 # CDK "build a Lambda in Docker" pattern). Run manually and compare the report.
 #
-# Requires ai-avimiot/pipewarden@v1 to be published.
+# Requires ai-avimiot/pipewarden@latest to be published.
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
 
       - name: PipeWarden (transparent + DNS, monitor)
         id: nfw
-        uses: ai-avimiot/pipewarden/native-proxy/action@v1
+        uses: ai-avimiot/pipewarden/native-proxy/action@latest
         with:
           policy-file: nodejs/network-policy.yml
           mode: monitor
