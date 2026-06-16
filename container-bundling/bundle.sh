@@ -16,12 +16,12 @@ set -euo pipefail
 echo "==> CDK-style: bundling a Lambda artifact inside a Docker container"
 docker run --rm python:3.12-alpine sh -c '
   set -e
-  echo "[container] installing dependencies from PyPI..."
-  pip install --quiet --disable-pip-version-check --target /asset-output requests
+  echo "[container] installing dependencies from PyPI into /asset-output..."
+  pip install --quiet --disable-pip-version-check --root-user-action=ignore --target /asset-output requests
   echo "[container] making an outbound request from inside the build..."
-  python -c "import requests; print(\"[container] GET httpbin ->\", requests.get(\"https://httpbin.org/ip\", timeout=10).json())"
+  PYTHONPATH=/asset-output python -c "import requests; print(\"[container] GET example.com ->\", requests.get(\"https://example.com\", timeout=15).status_code)"
 '
 echo "==> Bundling done."
-echo "    The PyPI install and the httpbin request above came from INSIDE the"
+echo "    The PyPI install and the example.com request above came from INSIDE the"
 echo "    container and are invisible to native-proxy mode. Compare the report:"
 echo "    the host-side curl is listed; this container traffic is not."
