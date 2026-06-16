@@ -28,7 +28,7 @@ jobs:
       - name: PipeWarden (transparent + DNS, monitor)
         uses: ai-avimiot/pipewarden/native-proxy/action@latest
         with:
-          policy-file: nodejs/network-policy.yml
+          # No policy-file → auto-resolve .github/pipewarden/common + per-pipeline
           mode: monitor
           artifact-name: container-scenario-report
 

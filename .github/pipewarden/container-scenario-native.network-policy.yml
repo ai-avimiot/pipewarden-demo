@@ -1,0 +1,11 @@
+# Per-pipeline policy for container-scenario-native.yml (merged with common).
+# Only host egress is policy-checked; the container's pip install is invisible.
+version: "1"
+mode: monitor
+
+rules:
+  - name: "Application API"
+    allow:
+      domains: ["httpbin.org"]
+      ports: [443]
+      protocols: [https]

@@ -26,7 +26,7 @@ jobs:
         id: nfw
         uses: ai-avimiot/pipewarden/native-proxy/action@latest
         with:
-          policy-file: nodejs/network-policy.yml
+          # No policy-file → auto-resolve .github/pipewarden/common + per-pipeline
           mode: monitor
 
       - name: "curl httpbin.org (proxy-aware)"
