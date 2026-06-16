@@ -83,7 +83,7 @@ It runs two outbound calls under monitoring:
    HTTPS call **from inside the container** — **does not appear** in the report.
 
 Compare the two in the uploaded `container-scenario-report` artifact / job summary: you'll
-see the host request listed but not the container's PyPI install or its httpbin call.
+see the host request listed but not the container's PyPI install or its example.com call.
 
 > Note: image *pulls* performed by the Docker daemon (e.g. `docker pull`) happen on the
 > host and may be captured; the demo pre-pulls the image before monitoring so the focus
