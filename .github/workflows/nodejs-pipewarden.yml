@@ -1,6 +1,6 @@
 name: Node.js CI with PipeWarden (container mode)
 
-# Requires ai-avimiot/pipewarden@v1 to be published and its container images
+# Requires ai-avimiot/pipewarden@latest to be published and its container images
 # pushed to GHCR as public packages.
 
 on:
@@ -14,8 +14,8 @@ on:
   workflow_dispatch:
 
 env:
-  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:1.0.2
-  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:1.0.2
+  PIPEWARDEN_IMAGE: ghcr.io/ai-avimiot/pipewarden:latest
+  PIPEWARDEN_PROXY_IMAGE: ghcr.io/ai-avimiot/pipewarden-proxy:latest
   # PIPEWARDEN_RUNNER_IMAGE intentionally omitted — falls back to
   # catthehacker/ubuntu:act-22.04 which bundles Node.js, Python, etc.
   # The minimal pipewarden-runner image only has iproute2 + sudo, which is

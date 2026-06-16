@@ -1,0 +1,50 @@
+name: "Test: Container build step — native-proxy blind spot"
+
+# Demonstrates a known limitation: native-proxy mode captures HOST egress, but
+# NOT traffic from inside containers that a build step launches itself (the AWS
+# CDK "build a Lambda in Docker" pattern). Run manually and compare the report.
+#
+# Requires ai-avimiot/pipewarden@latest to be published.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  container-scenario:
+    name: "Host egress captured, container egress not"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # Pull the bundling image BEFORE monitoring starts, so the demo focuses on
+      # the container's own egress rather than the Docker daemon's image pull.
+      - name: Pre-pull bundling image (before monitoring)
+        run: docker pull python:3.12-alpine
+
+      - name: PipeWarden (transparent + DNS, monitor)
+        id: nfw
+        uses: ai-avimiot/pipewarden/native-proxy/action@latest
+        with:
+          policy-file: nodejs/network-policy.yml
+          mode: monitor
+
+      - name: "Host egress (CAPTURED): curl httpbin"
+        run: curl -s https://httpbin.org/ip
+
+      - name: "Container egress (NOT captured): CDK-style Docker bundling"
+        run: bash container-bundling/bundle.sh
+
+      - name: Results
+        if: always()
+        run: |
+          echo "Status:  ${{ steps.nfw.outputs.status }}"
+          echo "Blocked: ${{ steps.nfw.outputs.blocked-count }}"
+          echo "Expectation: the report lists the host curl to httpbin.org,"
+          echo "but NOT the container's pip install (pypi.org) or its httpbin call."
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: container-scenario-report
+          path: /tmp/report/

@@ -1,6 +1,6 @@
 name: "Test: Node.js — Native Proxy (Transparent)"
 
-# Requires ai-avimiot/pipewarden@v1 to be published. The action handles setup
+# Requires ai-avimiot/pipewarden@latest to be published. The action handles setup
 # AND teardown automatically (teardown runs as a post-step even on failure).
 
 on:
@@ -24,7 +24,7 @@ jobs:
 
       - name: PipeWarden (transparent + DNS)
         id: nfw
-        uses: ai-avimiot/pipewarden/native-proxy/action@v1
+        uses: ai-avimiot/pipewarden/native-proxy/action@latest
         with:
           policy-file: nodejs/network-policy.yml
           mode: monitor
