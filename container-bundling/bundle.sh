@@ -18,10 +18,10 @@ docker run --rm python:3.12-alpine sh -c '
   set -e
   echo "[container] installing dependencies from PyPI into /asset-output..."
   pip install --quiet --disable-pip-version-check --root-user-action=ignore --target /asset-output requests
-  echo "[container] making an outbound request from inside the build..."
-  PYTHONPATH=/asset-output python -c "import requests; print(\"[container] GET example.com ->\", requests.get(\"https://example.com\", timeout=15).status_code)"
+  echo "[container] dependency install complete — this PyPI egress happened from inside the container"
 '
 echo "==> Bundling done."
-echo "    The PyPI install and the example.com request above came from INSIDE the"
-echo "    container and are invisible to native-proxy mode. Compare the report:"
-echo "    the host-side curl is listed; this container traffic is not."
+echo "    The PyPI install above (pypi.org / files.pythonhosted.org) ran INSIDE the"
+echo "    container, over the Docker bridge — so it is invisible to native-proxy mode."
+echo "    Compare the report: the host-side curl to httpbin.org is listed; this"
+echo "    container traffic is not."

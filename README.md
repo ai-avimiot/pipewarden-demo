@@ -78,16 +78,24 @@ bundling would not show up in the report.
 `container-scenario-native.yml` (run via **workflow_dispatch**) makes the gap concrete.
 It runs two outbound calls under monitoring:
 
-1. a **host** `curl https://httpbin.org/ip` — **appears** in the report, and
-2. `container-bundling/bundle.sh`, which does `docker run … pip install requests` plus an
-   HTTPS call **from inside the container** — **does not appear** in the report.
+1. a **host** `curl https://httpbin.org/ip` — **appears** in the report (full connection,
+   TLS SNI, IP enrichment), and
+2. `container-bundling/bundle.sh`, which does `docker run … pip install requests` —
+   fetching from PyPI **from inside the container** — whose connections **do not appear**
+   in the report.
 
-Compare the two in the uploaded `container-scenario-report` artifact / job summary: you'll
-see the host request listed but not the container's PyPI install or its example.com call.
+Compare the two in the uploaded `container-scenario-report` artifact / job summary: the
+host request to `httpbin.org` is listed with full detail, while the container's downloads
+from `pypi.org` / `files.pythonhosted.org` are absent.
 
-> Note: image *pulls* performed by the Docker daemon (e.g. `docker pull`) happen on the
-> host and may be captured; the demo pre-pulls the image before monitoring so the focus
-> stays on the container's own egress.
+> Notes on what does leak:
+> - Image *pulls* by the Docker daemon (e.g. `docker pull`) happen on the host and may be
+>   captured; the demo pre-pulls the image before monitoring so the focus stays on the
+>   container's own egress.
+> - Depending on the runner's Docker DNS configuration, some container *DNS lookups* can
+>   still reach PipeWarden's resolver and show up as DNS-only entries — but the actual
+>   container *connections* (the bytes, the TLS SNI, the request content) are not captured.
+>   The PyPI download above is the clean case: no DNS entry and no connection.
 
 ### What to do today
 
