@@ -18,7 +18,7 @@ jobs:
     name: "Host egress captured, container egress not"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Pull the bundling image BEFORE monitoring starts, so the demo focuses on
       # the container's own egress rather than the Docker daemon's image pull.
