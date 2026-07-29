@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    # ai-avimiot/pipewarden/native-proxy/action is deliberately referenced as
+    # @latest, not pinned to a SHA: this demo repo exists to smoke-test the
+    # freshly published PipeWarden release, and post-release-smoke.yml in the
+    # main pipewarden repo depends on that floating ref resolving to whatever
+    # was just released. Dependabot must never rewrite it to a version or SHA.
+    ignore:
+      - dependency-name: "ai-avimiot/pipewarden/native-proxy/action"
